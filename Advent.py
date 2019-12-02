@@ -37,23 +37,21 @@ class Advent:
         self._final_noun = 0
         self._final_verb = 0
 
-        def try_new_combination(op_code_array, noun_to_test, verb_to_test):
-            op_code_array[1] = noun_to_test
-            op_code_array[2] = verb_to_test
+        def try_new_combination(codes, noun_to_test, verb_to_test):
+            codes[1] = noun_to_test
+            codes[2] = verb_to_test
 
-            for idx, val in enumerate(op_code_array):
+            for idx, val in enumerate(codes):
                 if idx % 4 == 0:
                     if val == 1:
-                        op_code_array[op_code_array[idx + 3]] = op_code_array[op_code_array[idx + 1]] + op_code_array[
-                            op_code_array[idx + 2]]
+                        codes[codes[idx + 3]] = codes[codes[idx + 1]] + codes[codes[idx + 2]]
                     elif val == 2:
-                        op_code_array[op_code_array[idx + 3]] = op_code_array[op_code_array[idx + 1]] * op_code_array[
-                            op_code_array[idx + 2]]
+                        codes[codes[idx + 3]] = codes[codes[idx + 1]] * codes[codes[idx + 2]]
                     else:
                         break
                 else:
                     continue
-            return op_code_array[0]
+            return codes[0]
 
         for new_noun in range(0, 99):
             for new_verb in range(0, 99):
