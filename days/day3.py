@@ -56,12 +56,12 @@ class Day3:
         if not full_quiz:
             return self._shortest_manhattan_distance(intersections)
 
-        indices_wire_one = [self._wire_one.index(x) + 1 for x in intersections]
-        indices_wire_two = [self._wire_two.index(x) + 1 for x in intersections]
+        intersection_lengths_wire_one = [self._wire_one.index(x) + 1 for x in intersections]
+        intersection_lengths_wire_two = [self._wire_two.index(x) + 1 for x in intersections]
 
         local_minimum = sys.maxsize
-        for idx, val in enumerate(indices_wire_one):
-            new_minimum = indices_wire_one[idx] + indices_wire_two[idx]
+        for idx, val in enumerate(intersection_lengths_wire_one):
+            new_minimum = intersection_lengths_wire_one[idx] + intersection_lengths_wire_two[idx]
             if local_minimum > new_minimum:
                 local_minimum = new_minimum
         return local_minimum
