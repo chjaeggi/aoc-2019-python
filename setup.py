@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='Advent.py',
+    name='advent.py',
     version='1.0',
     packages=[''],
     url='',
