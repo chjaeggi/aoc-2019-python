@@ -1,2 +1,7 @@
 .idea
 .DS_Store
+*.pyc
+**/__pycache__
+MANIFEST
+build
+dist
