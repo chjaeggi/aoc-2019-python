@@ -12,7 +12,7 @@ class Advent:
         self._day1 = Day1().solve(full_quiz=True)
         self._day2 = Day2().solve(full_quiz=True)
         self._day3 = Day3().solve(full_quiz=True)
-        self._day4 = Day4().solve(full_quiz=False)
+        self._day4 = Day4().solve(full_quiz=True)
 
         print(self._day1)
         print(self._day2)
