@@ -17,8 +17,11 @@ class Day6:
             self._sum += 1
             if resulting_list is not None:
                 resulting_list.append(key)
-            new_parent = self._planets_dict[key]
-            self._evaluate_ascendants(new_parent, resulting_list)
+            try:
+                new_parent = self._planets_dict[key]
+                self._evaluate_ascendants(new_parent, resulting_list)
+            except KeyError:
+                pass
 
     @staticmethod
     def _get_first_common_element(first_list, second_list):
@@ -37,22 +40,23 @@ class Day6:
                 break
         return result
 
-    def solve(self, full_quiz=True):
-        for planet in self._planets_input:
-            self._planets_dict[planet] = ''
+    def _calculate_sum(self):
+        self._sum = 0
+        for child, parent in self._planets_dict.items():
+            if parent != '':
+                self._evaluate_ascendants(parent)
+        return self._sum
 
+    def _create_planet_relations(self):
         for index, _ in enumerate(self._planets_input):
             if index % 2 == 1:
                 child = self._planets_input[index]
                 parent = self._planets_input[index - 1]
                 self._planets_dict[child] = parent
 
-        self._sum = 0
-        for child, parent in self._planets_dict.items():
-            if parent != '':
-                self._evaluate_ascendants(parent)
-
-        result = self._sum
+    def solve(self, full_quiz=True):
+        self._create_planet_relations()
+        result = self._calculate_sum()
 
         if full_quiz:
             self._evaluate_ascendants(self._planets_dict['SAN'], resulting_list=self._santa_tree)
