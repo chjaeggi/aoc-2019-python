@@ -7,6 +7,8 @@ class Day6:
         self._planets_input = None
         self._planets_dict = OrderedDict()
         self._sum = 0
+        self._santa_tree = []
+        self._you_tree = []
         with open('inputs/06-input.txt') as data:
             self._planets_input = data.read().replace('\n', ')').split(')')
 
@@ -45,6 +47,7 @@ class Day6:
                 parent = self._planets_input[index - 1]
                 self._planets_dict[child] = parent
 
+        self._sum = 0
         for child, parent in self._planets_dict.items():
             if parent != '':
                 self._evaluate_ascendants(parent)
@@ -52,18 +55,11 @@ class Day6:
         result = self._sum
 
         if full_quiz:
-            santa_tree = []
-            you_tree = []
-
-            for child, parent in self._planets_dict.items():
-                if child == 'SAN':
-                    self._evaluate_ascendants(parent, resulting_list=santa_tree)
-                if child == 'YOU':
-                    self._evaluate_ascendants(parent, resulting_list=you_tree)
-
-            common_element = self._get_first_common_element(santa_tree, you_tree)
-            santa = self._get_number_of_items_until_element(santa_tree, common_element)
-            you = self._get_number_of_items_until_element(you_tree, common_element)
+            self._evaluate_ascendants(self._planets_dict['SAN'], resulting_list=self._santa_tree)
+            self._evaluate_ascendants(self._planets_dict['YOU'], resulting_list=self._you_tree)
+            common_element = self._get_first_common_element(self._santa_tree, self._you_tree)
+            santa = self._get_number_of_items_until_element(self._santa_tree, common_element)
+            you = self._get_number_of_items_until_element(self._you_tree, common_element)
             result = santa + you
 
         return result
