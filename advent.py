@@ -8,7 +8,7 @@ from days.day5 import Day5
 from days.day6 import Day6
 from days.day7.day7_1 import Day7_1
 from days.day7.day7_2 import Day7_2
-from days.day8 import Day8
+from days.day8.day8 import Day8
 
 
 class Advent:
