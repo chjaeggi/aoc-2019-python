@@ -52,6 +52,6 @@ class Day8:
             image_out.putdata(self._picture)
             image_out.save('days/day8/answer.png')
             image_out.show()
-            return "See solution open image viewer"
+            return "See solution in open image viewer"
 
         return self._result
