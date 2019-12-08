@@ -3,6 +3,9 @@ import sys
 from PIL import Image
 
 
+TRANSPARENT = 2
+
+
 class Day8:
 
     def __init__(self):
@@ -14,6 +17,8 @@ class Day8:
         self._number_of_0 = []
         self._number_of_1 = []
         self._number_of_2 = []
+        self._picture = [TRANSPARENT] * self._height * self._width
+        self._result = None
         with open('inputs/08-input.txt') as data:
             self._input = list(data.read())
 
@@ -32,23 +37,21 @@ class Day8:
             layer_number += 1
 
         min_0 = sys.maxsize
-        result = 0
         for index, element in enumerate(self._number_of_0):
             if min_0 > element:
-                result = self._number_of_1[index] * self._number_of_2[index]
+                self._result = self._number_of_1[index] * self._number_of_2[index]
                 min_0 = element
 
         if full_quiz:
-            pixels = [2] * self._height * self._width
-            for index in range(len(pixels)):
+            for index in range(len(self._picture)):
                 for layer in self._layers:
-                    if int(layer[index]) != 2 and pixels[index] == 2:
-                        pixels[index] = int(layer[index])
+                    if int(layer[index]) != TRANSPARENT and self._picture[index] == TRANSPARENT:
+                        self._picture[index] = int(layer[index])
 
             image_out = Image.new('1', (self._width, self._height))
-            image_out.putdata(pixels)
+            image_out.putdata(self._picture)
             image_out.save('days/day8/answer.png')
             image_out.show()
             return "See solution open image viewer"
 
-        return result
+        return self._result

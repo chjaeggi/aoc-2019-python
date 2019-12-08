@@ -36,5 +36,3 @@ class Day2:
                     self._final_noun = new_noun
                     self._final_verb = new_verb
                     return 100 * self._final_noun + self._final_verb
-
-

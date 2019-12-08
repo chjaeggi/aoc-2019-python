@@ -37,7 +37,7 @@ class Day5:
                 pointer += 2
 
             elif op_code.endswith('4'):
-                result = codes[codes[pointer+1]]
+                result = codes[codes[pointer + 1]]
                 if codes[pointer + 2] == 99:
                     return result
                 pointer += 2
