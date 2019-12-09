@@ -12,8 +12,11 @@ class Day9:
             self._original_numbers = list(map(int, data.read().split(',')))
 
     def solve(self, full_quiz=True):
-        arr = [0] * len(self._original_numbers) * 100
+        arr = [0] * len(self._original_numbers)
         self._original_numbers.extend(arr)
-        result = IntCodeMachine(self._original_numbers).run(2)
+        if full_quiz:
+            result = IntCodeMachine(self._original_numbers).run(2)
+        else:
+            result = IntCodeMachine(self._original_numbers).run(1)
         return result
 
