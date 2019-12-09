@@ -14,6 +14,20 @@ class IntCodeMachine:
     def has_halted(self):
         return self._halted
 
+    def _get_command_arguments(self, op_code):
+
+        param_modes = [list(op_code)[2], list(op_code)[1], list(op_code)[0]]
+        params = [''] * 3
+
+        for idx in range(len(param_modes)):
+            if param_modes[idx] == self.POSITION_MODE:
+                params[idx] = self._codes[self._pointer + 1 + idx]
+            elif param_modes[idx] == self.IMMEDIATE_MODE:
+                params[idx] = self._pointer + 1 + idx
+            else:
+                params[idx] = self._relative_base + self._codes[self._pointer + 1 + idx]
+        return params[0], params[1], params[2]
+
     def run(self, instruction_input):
         while not self._halted:
             op_code = str(self._codes[self._pointer]).zfill(5)
@@ -22,30 +36,7 @@ class IntCodeMachine:
                 self._halted = True
                 return self._result
 
-            param1_mode = list(op_code)[2]
-            param2_mode = list(op_code)[1]
-            param3_mode = list(op_code)[0]
-
-            if param1_mode == self.POSITION_MODE:
-                param1 = self._codes[self._pointer + 1]
-            elif param1_mode == self.IMMEDIATE_MODE:
-                param1 = self._pointer + 1
-            else:
-                param1 = self._relative_base + self._codes[self._pointer + 1]
-
-            if param2_mode == self.POSITION_MODE:
-                param2 = self._codes[self._pointer + 2]
-            elif param2_mode == self.IMMEDIATE_MODE:
-                param2 = self._pointer + 2
-            else:
-                param2 = self._relative_base + self._codes[self._pointer + 2]
-
-            if param3_mode == self.POSITION_MODE:
-                param3 = self._codes[self._pointer + 3]
-            elif param3_mode == self.IMMEDIATE_MODE:
-                param3 = self._pointer + 3
-            else:
-                param3 = self._relative_base + self._codes[self._pointer + 3]
+            param1, param2, param3 = self._get_command_arguments(op_code)
 
             if op_code.endswith('1'):
                 self._codes[param3] = self._codes[param1] + self._codes[param2]
@@ -60,14 +51,6 @@ class IntCodeMachine:
                 self._pointer += 2
 
             elif op_code.endswith('4'):
-                param_mode = list(op_code)[2]
-                if param_mode == self.POSITION_MODE:
-                    p = self._codes[self._pointer + 1]
-                elif param_mode == self.IMMEDIATE_MODE:
-                    p = self._pointer + 1
-                else:
-                    p = self._relative_base + self._codes[self._pointer + 1]
-
                 self._result = self._codes[param1]
                 self._pointer += 2
                 print(self._result)
