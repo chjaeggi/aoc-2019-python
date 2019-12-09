@@ -1,6 +1,7 @@
 import time
 
 from days.day1 import Day1
+from days.day10 import Day10
 from days.day2 import Day2
 from days.day3 import Day3
 from days.day4 import Day4
@@ -22,7 +23,8 @@ class Advent:
         # self._day6 = Day6().solve(full_quiz=True)
         # self._day7 = Day7().solve(full_quiz=True)
         # self._day8 = Day8().solve(full_quiz=False)
-        self._day9 = Day9().solve(full_quiz=True)
+        # self._day9 = Day9().solve(full_quiz=True)
+        self._day10 = Day10().solve(full_quiz=True)
 
         # print("Day1:     {}".format(self._day1))
         # print("Day2:     {}".format(self._day2))
@@ -32,7 +34,8 @@ class Advent:
         # print("Day6:     {}".format(self._day6))
         # print("Day7:     {}".format(self._day7))
         # print("Day8:     {}".format(self._day8))
-        print("Day9:     {}".format(self._day9))
+        # print("Day9:     {}".format(self._day9))
+        print("Day10:    {}".format(self._day10))
 
 
 if __name__ == '__main__':
