@@ -8,5 +8,5 @@ setup(
     license='',
     author='jaeggi',
     author_email='chr.jaeggi@gmail.com',
-    description='Advent of Code', install_requires=['']
+    description='Advent of Code', install_requires=['numpy']
 )

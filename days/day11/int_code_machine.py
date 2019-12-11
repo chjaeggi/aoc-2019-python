@@ -20,6 +20,7 @@ class IntCodeMachine:
         self._relative_base = 0
         self._result = 0
         self._halted = False
+
         self._is_rotation_command = False
         self._map = {}
         self._current_position = (0, 0)
@@ -28,6 +29,45 @@ class IntCodeMachine:
     @property
     def has_halted(self):
         return self._halted
+
+    def _turn_left(self):
+        if self._facing == self.UP:
+            self._facing = self.LEFT
+            self._current_position = (self._current_position[0] - 1, self._current_position[1])
+        elif self._facing == self.LEFT:
+            self._facing = self.DOWN
+            self._current_position = (self._current_position[0], self._current_position[1] + 1)
+        elif self._facing == self.DOWN:
+            self._facing = self.RIGHT
+            self._current_position = (self._current_position[0] + 1, self._current_position[1])
+        else:
+            self._facing = self.UP
+            self._current_position = (self._current_position[0], self._current_position[1] - 1)
+
+    def _turn_right(self):
+        if self._facing == self.UP:
+            self._facing = self.RIGHT
+            self._current_position = (self._current_position[0] + 1, self._current_position[1])
+        elif self._facing == self.RIGHT:
+            self._facing = self.DOWN
+            self._current_position = (self._current_position[0], self._current_position[1] + 1)
+        elif self._facing == self.DOWN:
+            self._facing = self.LEFT
+            self._current_position = (self._current_position[0] - 1, self._current_position[1])
+        else:
+            self._facing = self.UP
+            self._current_position = (self._current_position[0], self._current_position[1] - 1)
+
+    def _interpret_output(self):
+        if self._is_rotation_command:
+            self._is_rotation_command = False
+            if self._result == self.LEFT_TURN:
+                self._turn_left()
+            else:
+                self._turn_right()
+        else:
+            self._is_rotation_command = True
+            self._map[self._current_position] = self._result
 
     def _get_argument_addresses(self, op_code):
 
@@ -72,38 +112,7 @@ class IntCodeMachine:
 
             elif op_code.endswith('4'):
                 self._result = self._codes[arg1_address]
-
-                if self._is_rotation_command:
-                    self._is_rotation_command = False
-                    if self._result == self.LEFT_TURN:
-                        if self._facing == self.UP:
-                            self._facing = self.LEFT
-                            self._current_position = (self._current_position[0] - 1, self._current_position[1])
-                        elif self._facing == self.LEFT:
-                            self._facing = self.DOWN
-                            self._current_position = (self._current_position[0], self._current_position[1] + 1)
-                        elif self._facing == self.DOWN:
-                            self._facing = self.RIGHT
-                            self._current_position = (self._current_position[0] + 1, self._current_position[1])
-                        else:
-                            self._facing = self.UP
-                            self._current_position = (self._current_position[0], self._current_position[1] - 1)
-                    else:
-                        if self._facing == self.UP:
-                            self._facing = self.RIGHT
-                            self._current_position = (self._current_position[0] + 1, self._current_position[1])
-                        elif self._facing == self.RIGHT:
-                            self._facing = self.DOWN
-                            self._current_position = (self._current_position[0], self._current_position[1] + 1)
-                        elif self._facing == self.DOWN:
-                            self._facing = self.LEFT
-                            self._current_position = (self._current_position[0] - 1, self._current_position[1])
-                        else:
-                            self._facing = self.UP
-                            self._current_position = (self._current_position[0], self._current_position[1] - 1)
-                else:
-                    self._is_rotation_command = True
-                    self._map[self._current_position] = self._result
+                self._interpret_output()
                 self._pointer += 2
 
             elif op_code.endswith('5'):
