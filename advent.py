@@ -1,6 +1,6 @@
 import time
 
-from days.day12 import Day12
+from days.day12.day12 import Day12
 
 
 class Advent:
