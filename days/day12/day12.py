@@ -1,5 +1,4 @@
 import itertools
-import math
 
 import numpy as np
 
@@ -12,8 +11,7 @@ class Day12:
         self._input = None
         self._result = 0
         self._planets = []
-        with open('inputs/12-input.txt') as data:
-            self._numbers = data.read()  # TODO
+        self._iterations_per_axis = [0] * 3
 
     @staticmethod
     def _update_gravity(planet1, planet2):
@@ -56,63 +54,67 @@ class Day12:
             planet.y += planet.v_y
             planet.z += planet.v_z
 
-    def _compute_lcm(self, x, y):
-        # choose the greater number
-        if x > y:
-            greater = x
-        else:
-            greater = y
-        while (True):
-            if ((greater % x == 0) and (greater % y == 0)):
-                lcm = greater
-                break
-            greater += 1
-        return lcm
-
     def solve(self, full_quiz=True):
-        self._planets = [Planet(14, 15, -2), Planet(17, -3, 4), Planet(6, 12, -13), Planet(-2, 10, -8)]  # TODO
-        combinations = list(itertools.combinations(range(0, 4), 2))
+        self._planets = [Planet(14, 15, -2), Planet(17, -3, 4), Planet(6, 12, -13), Planet(-2, 10, -8)]
+        combinations = list(itertools.combinations(range(len(self._planets)), 2))
 
         if full_quiz:
-            constellation_found_p = [False] * 4
-            constellation_found_v = [False] * 4
-            planet_px_hashes = [dict() for _ in range(3)]
-            planet_py_hashes = [dict() for _ in range(3)]
-            planet_pz_hashes = [dict() for _ in range(3)]
-            planet_vx_hashes = [dict() for _ in range(3)]
-            planet_vy_hashes = [dict() for _ in range(3)]
-            planet_vz_hashes = [dict() for _ in range(3)]
+            planet_px_hashes = {}
+            planet_py_hashes = {}
+            planet_pz_hashes = {}
+            x_repeated = False
+            y_repeated = False
+            z_repeated = False
             counter = 0
-            while True:
-                counter += 1
+            while not (x_repeated and y_repeated and z_repeated):
+
+                px_hash = hash((self._planets[0].x, self._planets[1].x,
+                                self._planets[2].x, self._planets[3].x,
+                                self._planets[0].v_x, self._planets[1].v_x,
+                                self._planets[2].v_x, self._planets[3].v_x))
+
+                py_hash = hash((self._planets[0].y, self._planets[1].y,
+                                self._planets[2].y, self._planets[3].y,
+                                self._planets[0].v_y, self._planets[1].v_y,
+                                self._planets[2].v_y, self._planets[3].v_y))
+
+                pz_hash = hash((self._planets[0].z, self._planets[1].z,
+                                self._planets[2].z, self._planets[3].z,
+                                self._planets[0].v_z, self._planets[1].v_z,
+                                self._planets[2].v_z, self._planets[3].v_z))
+
+                if not x_repeated:
+                    if px_hash in planet_px_hashes:
+                        x_repeated = True
+                        self._iterations_per_axis[0] = counter
+                    else:
+                        planet_px_hashes[px_hash] = counter
+
+                if not y_repeated:
+                    if py_hash in planet_py_hashes:
+                        y_repeated = True
+                        self._iterations_per_axis[1] = counter
+                    else:
+                        planet_py_hashes[py_hash] = counter
+
+                if not z_repeated:
+                    if pz_hash in planet_pz_hashes:
+                        z_repeated = True
+                        self._iterations_per_axis[2] = counter
+                    else:
+                        planet_pz_hashes[pz_hash] = counter
 
                 for combination in combinations:
                     self._update_gravity(self._planets[combination[0]], self._planets[combination[1]])
                 self._apply_gravity()
+                counter += 1
 
-                planet_p_hash = hash(self._planets)
-                planet_v_hash = self._planets[planet_idx].velocity_hash
-
-                for planet_idx in range(4):
-                    if planet_p_hash in planet_p_hashes[planet_idx] and not constellation_found_p[planet_idx]:
-                        print(counter)
-                        constellation_found_p[planet_idx] = True
-                    else:
-                        planet_p_hashes[planet_idx][planet_p_hash] = counter
-
-                    if planet_v_hash in planet_v_hashes[planet_idx] and not constellation_found_v[planet_idx]:
-                        print(counter)
-                        constellation_found_v[planet_idx] = True
-                    else:
-                        planet_v_hashes[planet_idx][planet_v_hash] = counter
-
-                if all(b is True for b in constellation_found_p) and all(a is True for a in constellation_found_v):
-                    return np.lcm.reduce([3, 21, 26, 81, 93, 219, 236, 505])
+            return np.lcm.reduce(
+                [self._iterations_per_axis[0], self._iterations_per_axis[1], self._iterations_per_axis[2]])
 
         for i in range(1000):
             for combination in combinations:
                 self._update_gravity(self._planets[combination[0]], self._planets[combination[1]])
-
             self._apply_gravity()
 
         for planet in self._planets:

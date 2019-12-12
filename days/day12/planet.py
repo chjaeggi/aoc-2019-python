@@ -22,11 +22,3 @@ class Planet:
     @property
     def total_energy(self):
         return self.energy_kin * self.energy_pot
-
-    # @property
-    # def position_hash(self):
-    #     return hash((self.x, self.y, self.z))
-    #
-    # @property
-    # def velocity_hash(self):
-    #     return hash((self.v_x, self.v_y, self.v_z))
